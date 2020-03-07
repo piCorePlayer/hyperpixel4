@@ -4,15 +4,31 @@ HyperPixel 4.0 is an 800x480 pixel display for the Raspberry Pi, with optional c
 
 These drivers are for Raspberry Pi models before the Pi 3B+.
 
-## Installing / Uninstalling
+## Installing
 
-1. Clone this GitHub repository to your Pi:
+1. Get Init files: Start and ssh session to your pi, and run the following commands
+
 ```
-git clone https://github.com/pimoroni/hyperpixel4 -b pCP
+ce
+wget https://github.com/piCorePlayer/hyperpixel4/raw/pCP/dist/hp4-init
+wget https://github.com/piCorePlayer/hyperpixel4/raw/pCP/dist/jivelite.sh
+chmod 755 hp4-init
+chmod 755 jivelite.sh
+m1
+c1
+cd overlays
+wget https://github.com/piCorePlayer/hyperpixel4/raw/pCP/dist/hyperpixel4.dtbo
+cd
+wget https://github.com/piCorePlayer/hyperpixel4/raw/pCP/dist/lcd-brightness.sh
+chmod 755 lcd-brightness.sh
 ```
-2. copy dist/hp4-init to /mnt/mmcblk0p1/tce
-3. Add /mnt/mmcblk0p1/tce/hp4-init to /opt/bootlocal.sh  (Add it before pCP startup)
-4. Add to /mnt/mmcblk0p1/config.txt:
+
+2. In /mnt/mmcblk0p1/config.txt, put the '#' sign in front of the line that looks like.
+```
+#dtparam=i2c_arm=on,spi=on,i2s=on
+```
+
+3. Add to the bottom of /mnt/mmcblk0p1/config.txt:
 **pi0-pi3B+**
 ```
 dtoverlay=hyperpixel4,touchscreen-size-x=800,touchscreen-size-y=480
@@ -48,9 +64,12 @@ dpi_timings=480 0 10 16 59 800 0 15 113 15 0 0 0 60 0 32000000 6
   ```
     * The touchscreen will need calibrated after a change in rotation.
 
+
+4. Add /mnt/mmcblk0p1/tce/hp4-init to /opt/bootlocal.sh  (Add it before pCP startup)
+
 5. Install jivelite
-    * Copy dist/jivelite.sh to /mnt/mmcblk0p2/tce/jivelite.sh
     * Install jivelite from the pCP Tweaks web page, then reboot.
+
 6. Touch calibration
     * After boot, start a ssh session to your pi, and run the following commands. When you run ts_calibrate, touch the targets on your display.
 ```
@@ -58,7 +77,7 @@ sudo pkill jivelite
 sudo ts_calibrate
 pcp br
 ```
+
 7. Backlight
    * From the pCP Extension interface install the extension pigpiod.tcz
-   * Copy dist/lcd-brightness.sh to /home/tc/lcd-brightness.sh
    * Save and then reboot, everything should be setup.

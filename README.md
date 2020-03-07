@@ -29,6 +29,7 @@ chmod 755 lcd-brightness.sh
 ```
 
 3. Add to the bottom of /mnt/mmcblk0p1/config.txt:
+
 **pi0-pi3B+**
 ```
 dtoverlay=hyperpixel4,touchscreen-size-x=800,touchscreen-size-y=480

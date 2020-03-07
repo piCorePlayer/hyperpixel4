@@ -6,46 +6,79 @@ These drivers are for Raspberry Pi models before the Pi 3B+.
 
 ## Installing / Uninstalling
 
-1. Make sure you're running Raspbian Buster or Raspbian Stretch.
-
-2. Update your Pi with `sudo apt update` and `sudo apt upgrade`.
-
-3. Clone this GitHub repository to your Pi:
+1 . Clone this GitHub repository to your Pi:
 
 ```
-git clone https://github.com/pimoroni/hyperpixel4 -b pi3
+git clone https://github.com/pimoroni/hyperpixel4 -b pCP
 ```
 
-4. Then run the installer to install:
+2. copy dist/hp4-init to /mnt/mmcblk0p1/tce
 
+3. Add /mnt/mmcblk0p1/tce/hp4-init to /opt/bootlocal.sh  (Add it before pCP startup)
+
+4. Add to /mnt/mmcblk0p1/config.txt:
+
+pi0-pi3B+
 ```
-cd hyperpixel4
-sudo ./install.sh
+dtoverlay=hyperpixel4,touchscreen-size-x=800,touchscreen-size-y=480
+display_rotate=1
+overscan_left=0
+overscan_right=0
+overscan_top=0
+overscan_bottom=0
+enable_dpi_lcd=1
+display_default_lcd=1
+dpi_group=2
+dpi_mode=87
+dpi_output_format=0x7f216
+hdmi_timings=480 0 10 16 59 800 0 15 113 15 0 0 0 60 0 32000000 6
 ```
+
+pi4:
+dtoverlay=hyperpixel4,touchscreen-size-x=800,touchscreen-size-y=480
+display_rotate=1
+gpio=0-25=a2
+enable_dpi_lcd=1
+dpi_group=2
+dpi_mode=87
+dpi_output_format=0x7f216
+dpi_timings=480 0 10 16 59 800 0 15 113 15 0 0 0 60 0 32000000 6
 
 ## Rotation
 
-To keep your touchscreen rotated with the display, you should rotate HyperPixel4 using the `hyperpixel4-rotate` command rather than "Screen Configuration."
+* The settings above will show the display in landscape mode with the RPI 40pin header on the bottom
 
-This command will update your touch settings and screen configuration settings to match, and you can rotate between four modes: left, right, normal, inverted.
+* To rotate the display 180 degrees, change the rotation line to:
+```
+display_rotate=3
+```
+* The touchscreen will need calibrated after a change in rotation.
 
-* `hyperpixel4-rotate left` - landscape, power/HDMI on bottom
-* `hyperpixel4-rotate right` - landscape, power/HDMI on top
-* `hyperpixel4-rotate normal` - portrait, USB ports on top
-* `hyperpixel4-rotate inverted` - portrait, USB ports on bottom
+5. Install jivelite
 
-This command changes the `display_rotate` parameter in `/boot/config.txt` and changes the touchscreen calibration dropped into `/etc/udev/rules.d/`.
+* Copy dist/jivelite.sh to /mnt/mmcblk0p2/tce/jivelite.sh
 
-## Touch rotation
+* Install jivelite from the pCP Tweaks web page, then reboot.
 
-If you're having trouble with your touch being 180 degrees rotated to your screen, or need to rotate the touch for other reasons you can use some additional arguments for the dtoverlay in config.txt, these are:
+6. Touch calibration
 
-* `touchscreen-inverted-x`
-* `touchscreen-inverted-y`
-* `touchscreen-swapped-x-y`
-
-For example, to rotate touch 180 degrees you want to invert both the x and y axis, by changing the `dtoverlay=hyperpixel4` line in your `/boot/config.txt` to:
+* After boot, start a ssh session to your pi, and run the following commands. When you run ts_calibrate, touch the targets on your display.
 
 ```
-dtoverlay=hyperpixel4,touchscreen-inverted-x,touchscreen-inverted-y
+sudo pkill jivelite
+sudo ts_calibrate
+pcp br
 ```
+
+7. Backlight
+
+* From the pCP Extension interface install the extension pigpiod.tcz
+
+* Copy dist/lcd-brightness.sh to /home/tc/lcd-brightness.sh
+
+* Goto the pCP web interface, on the tweaks page, at the bottom, enter the following in User Commands
+
+```
+pigpiod -t 1 -s 10 -f
+```
+* Save and then reboot, everything should be setup.

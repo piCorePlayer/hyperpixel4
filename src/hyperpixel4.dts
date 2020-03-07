@@ -23,7 +23,7 @@
     fragment@2 {
         target-path = "/";
         __overlay__ {
-            rpi_backlight: rpi_backlight {
+            backlight: backlight {
                 compatible = "gpio-backlight";
                 gpios = <&gpio 19 0>;
                 default-on;
@@ -91,6 +91,8 @@
         };
     };
     __overrides__ {
+        touchscreen-size-x = <&ft6236>,"touchscreen-size-x:0";
+        touchscreen-size-y = <&ft6236>,"touchscreen-size-y:0";
         touchscreen-inverted-x = <0>,"+6";
         touchscreen-inverted-y = <0>,"-7";
         touchscreen-swapped-x-y = <0>,"-5";

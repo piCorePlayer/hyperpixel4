@@ -80,5 +80,5 @@ pcp br
 ```
 
 7. Backlight
-   * From the pCP Extension interface install the extension pigpiod.tcz
+   * From the pCP Extension interface install the extension pigpio.tcz
    * Save and then reboot, everything should be setup.

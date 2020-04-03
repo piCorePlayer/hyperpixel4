@@ -66,7 +66,7 @@ dpi_timings=480 0 10 16 59 800 0 15 113 15 0 0 0 60 0 32000000 6
     * The touchscreen will need calibrated after a change in rotation.
 
 
-4. Add /mnt/mmcblk0p1/tce/hp4-init to /opt/bootlocal.sh  (Add it before pCP startup)
+4. Add /mnt/mmcblk0p2/tce/hp4-init to /opt/bootlocal.sh  (Add it before pCP startup)
 
 5. Install jivelite
     * Install jivelite from the pCP Tweaks web page, then reboot.
